@@ -63,6 +63,20 @@ join `pagamenti` AS payment on preno.id = payment.prenotazione_id\
 join `stanze` as rooms on preno.stanza_id = rooms.id\
 where rooms.floor = 1\
 \
+/* Prendi i dati di fatturazione per la prenotazione con id=7 */\
+\
+select preno.created_at as reservation_date, payment.status, payment.price, CONCAT(payer.name, ' ', payer.lastname) as payerName, payer.address, rooms.room_number as roomReserved from `prenotazioni` AS preno\
+join `pagamenti` AS payment on preno.id = payment.prenotazione_id\
+join `paganti` AS payer on payment.pagante_id = payer.id\
+join `stanze` as rooms on preno.stanza_id = rooms.id\
+where preno.id = 7\
+\
+/* Le stanze sono state tutte prenotate almeno una volta? (Visualizzare le stanze non ancora prenotate) */\
+\
+select rooms.* from stanze as rooms\
+left join prenotazioni as reserve on rooms.id = reserve.stanza_id\
+where reserve.id IS NULL\
+\
 \
 ********* JOIN*********\
 \
